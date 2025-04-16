@@ -1,10 +1,12 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import type { Request, Response} from "express"; 
 import cors from "cors";
-import { connectDB } from "./db.js"; // This is my first time importing a js file (not on disc) in typescript, and I hate it 
+import { connectDB } from "./db.ts";
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Define routes
 app.get("/tasks", async (req: Request, res: Response) => {
   try {
     // Sample data
@@ -18,9 +20,9 @@ app.get("/tasks", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/tasks", async (req: Request , res:Response) => {
+app.post("/tasks", async (req: Request , res: Response) => {
   try {
-    const { title, description, status } = req.body;
+    const { title, description, status } = req.body as { title: string; description?: string; status?: string };
     if (!title) {
       res.status(400).send("Title is required");
       return;
