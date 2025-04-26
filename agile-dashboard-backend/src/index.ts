@@ -1,12 +1,21 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-
+import { connectDB } from "./db.js"; // This is my first time importing a js file (not on disc) in typescript, and I hate it 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from Agile Dashboard Backend!");
+app.get("/tasks", async (req: Request, res: Response) => {
+  try {
+    // Sample data
+    const db = await connectDB();
+    const tasks = await db.all('SELECT * FROM tasks');
+    
+    res.json(tasks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 const PORT = process.env.PORT || 5000;
